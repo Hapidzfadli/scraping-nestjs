@@ -8,7 +8,7 @@ import { HttpModule } from '@nestjs/axios';
 @Module({
     imports: [
         HttpModule.register({
-            timeout: 30000,
+            timeout: 60000,
             maxRedirects: 5,
         }),
         WinstonModule.forRoot({
@@ -24,24 +24,9 @@ import { HttpModule } from '@nestjs/axios';
                         }),
                     ),
                 }),
-                // Add file transport for logging to a file
-                new winston.transports.File({
-                    filename: 'logs/error.log',
-                    level: 'error',
-                    format: winston.format.combine(
-                        winston.format.timestamp(),
-                        winston.format.json()
-                    )
-                }),
-                new winston.transports.File({
-                    filename: 'logs/combined.log',
-                    format: winston.format.combine(
-                        winston.format.timestamp(),
-                        winston.format.json()
-                    )
-                }),
             ],
         }),
+
     ],
     controllers: [ScrapingController],
     providers: [ScrapingService],
