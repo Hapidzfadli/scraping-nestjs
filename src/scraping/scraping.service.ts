@@ -193,7 +193,7 @@ export class ScrapingService {
             }
         });
 
-        const tag_string = `123movies, Andronymous77, bioskopkeren, ${mediaItem.post_title} Dunia21, ${mediaItem.post_title} IMDB, ${mediaItem.post_title} Indoxxi, ${mediaItem.post_title} LK21, Bos21, cinemaindo, Cinemamkv, Download Film ${mediaItem.post_title} Bluray Full Movie, Download Film ${mediaItem.post_title} Bluray Sub Indo, Download Film ${mediaItem.post_title} mp4 Sub Indo, Dramaindo, dunia21, Duniafilm21, filmapik, Fmoviez, FMZM, Ganool, Grandxxi, Gudangmovies21, Hunstulovers, Indomovies88, indoxx1, indoxxi, Juraganfilm ,Kawanfilmbaru, Kawanfilmku, Layarkaca, Layarkaca21, lk21, Melongfilm, Movie ${mediaItem.post_title}, Download Free Movies nb21 Nonton Film baru, Kawanfilmku, Layarkaca, Layarkaca21, lk21, Melongfilm, Movie ${mediaItem.post_title}, Download Free Movies nb21 Nonton Film Kaka Boss Movie Streaming, Nonton Film Kaka Boss Movie Streaming, Nonton Film ${mediaItem.post_title} Full Movie, Nonton Film ${mediaItem.post_title} HD Sub Indo ns21 bioskopkeren, Pahe, Pusatfilm21, RMCMV, Sinopsis Film ${mediaItem.post_title} Indonesia Sogafime Streamxxi, Televisi21, TV21, Zonafilm ,`;
+        const tag_string = `kios film 21, indoxx1, cinemaindo, nonton film indonesia, filmapik, ngefilm21, lk21, nonton film lk21, nonton ${mediaItem.post_title} lk21, gudangmovies21, download film indonesia terbaru lk21, download film sub indo, nonton film ${mediaItem.post_title}, nonton film gratis, layarkaca21, streaming film ${mediaItem.post_title}, ganool`;
 
         const postTags = tag_string
             .split(',')
