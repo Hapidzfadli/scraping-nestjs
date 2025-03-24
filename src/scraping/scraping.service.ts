@@ -85,7 +85,7 @@ export class ScrapingService {
             const post_title = $('h1.entry-title').text();
             const post_content = $('div.entry-content.entry-content-single p').first().text();
 
-            const trailerUrl = $('a.gmr-trailer-popup').attr('href') || '';
+            const trailerUrl = $('a.gmr-trailer-popup').attr('href') || 'xxx';
             const posterUrl = $('img.attachment-thumbnail').attr('src')?.replace('-60x90', '');
 
             const mediaItem: MediaItemDto = {
@@ -136,16 +136,16 @@ export class ScrapingService {
         movieData.each((index, element) => {
             const category = $(element).find('strong').text().trim();
 
-            if (category === 'Tahun:') {
+            if (category === 'Tahun:' || category === 'Year:') {
                 const year = $(element).find('a').text().trim();
                 taxonomy.muviyear = [{ name: year, slug: year.toLowerCase() }];
                 mediaItem.IDMUVICORE[0].IDMUVICORE_Year = year;
 
-            } else if (category === 'Kualitas:') {
+            } else if (category === 'Kualitas:' || category === 'Quality:') {
                 const quality = $(element).find('a').text().trim();
                 taxonomy.muviquality = [{ name: quality, slug: quality.toLowerCase() }];
 
-            } else if (category === 'Negara:') {
+            } else if (category === 'Negara:' || category === 'Country:') {
                 const countries = $(element).find('a');
 
                 taxonomy.muvicountry = [];
