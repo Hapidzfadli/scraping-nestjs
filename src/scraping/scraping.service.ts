@@ -114,7 +114,7 @@ export class ScrapingService {
                     IDMUVICORE_Poster: posterUrl ?? '',
                     IDMUVICORE_tmdbVotes: $('span[itemprop="ratingCount"]').text(),
                     IDMUVICORE_tmdbRating: $('span[itemprop="ratingValue"]').text().replace(',', '.'),
-                    IDMUVICORE_Released: $('time[itemprop="dateCreated"]').text(),
+                    IDMUVICORE_Released: $('time[itemprop="dateCreated"]').first().text() || $('span:contains("Release Date:")').next().first().text() || $('span:contains("Released:")').next().first().text() || '',
                     IDMUVICORE_Runtime: $('span[property="duration"]').text().replace('Min', ''),
                     IDMUVICORE_Year: '',
                     IDMUVICORE_Language: $('span[property="inLanguage"]').text(),
@@ -231,9 +231,9 @@ export class ScrapingService {
     private processPlayerData($: any, mediaItem: MediaItemDto): void {
 
         mediaItem.IDMUVICORE[0].IDMUVICORE_Player1 = `<iframe width="640" height="360" src="${$('div.gmr-embed-responsive').find('iframe').attr('src')}" scrolling="no" frameborder="0" allowfullscreen></iframe>`;
-        mediaItem.IDMUVICORE[0].IDMUVICORE_Player2 = '<iframe width="640" height="360" src="https://hxfile.co/embed-xxxxxx.html" scrolling="no" frameborder="0" allowfullscreen></iframe>';
-        mediaItem.IDMUVICORE[0].IDMUVICORE_Player3 = '<iframe width="640" height="360" src="https://gettapeads.com/e/xxxxxxxxxxx" scrolling="no" frameborder="0" allowfullscreen></iframe>';
-        mediaItem.IDMUVICORE[0].IDMUVICORE_Player4 = '<iframe width="640" height="360" src="https://krakenfiles.com/embed-video/xxxxxxxxx" scrolling="no" frameborder="0" allowfullscreen></iframe>';
+        mediaItem.IDMUVICORE[0].IDMUVICORE_Player2 = '';
+        mediaItem.IDMUVICORE[0].IDMUVICORE_Player3 = '';
+        mediaItem.IDMUVICORE[0].IDMUVICORE_Player4 = '';
     }
 
     private processDownloadLinks($: any, mediaItem: MediaItemDto): void {
@@ -253,16 +253,35 @@ export class ScrapingService {
         const episodeTitle = $('h1.entry-title[itemprop="name"]').text();
         mediaItem.IDMUVICORE[0].IDMUVICORE_Title_Episode = episodeTitle;
 
-        // Extract all digits from the title
-        const digits = episodeTitle.replace(/\D/g, '');
-        const hasSeason2 = episodeTitle.includes('S2');
-
-        if (hasSeason2 && digits.length >= 2) {
-            mediaItem.IDMUVICORE[0].IDMUVICORE_Episodenumber = digits.slice(-2);
-            mediaItem.IDMUVICORE[0].IDMUVICORE_Sessionnumber = digits[0];
+        // Improved regex patterns for season and episode extraction
+        const seasonMatch = episodeTitle.match(/S(\d+)/i) || episodeTitle.match(/Season\s+(\d+)/i);
+        const episodeMatch = episodeTitle.match(/E(\d+)/i) || episodeTitle.match(/Episode\s+(\d+)/i) || episodeTitle.match(/Ep\s*(\d+)/i);
+        
+        // Alternative: extract from patterns like "Season 1 Episode 5" or "S01E05"
+        const combinedMatch = episodeTitle.match(/S(\d+)E(\d+)/i) || episodeTitle.match(/Season\s+(\d+)\s+Episode\s+(\d+)/i);
+        
+        let seasonNumber = '1';
+        let episodeNumber = '1';
+        
+        if (combinedMatch) {
+            seasonNumber = combinedMatch[1];
+            episodeNumber = combinedMatch[2];
         } else {
-            mediaItem.IDMUVICORE[0].IDMUVICORE_Episodenumber = digits;
-            mediaItem.IDMUVICORE[0].IDMUVICORE_Sessionnumber = '1';
+            if (seasonMatch) {
+                seasonNumber = seasonMatch[1];
+            }
+            if (episodeMatch) {
+                episodeNumber = episodeMatch[1];
+            } else {
+                // Fallback: try to extract last number as episode
+                const numbers = episodeTitle.match(/\d+/g);
+                if (numbers && numbers.length > 0) {
+                    episodeNumber = numbers[numbers.length - 1];
+                }
+            }
         }
+        
+        mediaItem.IDMUVICORE[0].IDMUVICORE_Sessionnumber = seasonNumber;
+        mediaItem.IDMUVICORE[0].IDMUVICORE_Episodenumber = episodeNumber;
     }
 }
