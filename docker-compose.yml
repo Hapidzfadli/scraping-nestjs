@@ -1,15 +1,36 @@
 version: '3'
 
 services:
-  scraping-app:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: scraping-app
     restart: unless-stopped
-    ports:
-      - '3045:3045'
+    expose:
+      - '3045'
     volumes:
       - ./logs:/app/logs
     environment:
       - NODE_ENV=production
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: scraping-nginx
+    restart: unless-stopped
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/www:/var/www
+      - ./logs:/var/log/nginx
+    depends_on:
+      - app
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
