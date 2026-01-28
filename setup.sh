@@ -1,8 +1,10 @@
 #!/bin/bash
 
+# Server IP address
+SERVER_IP="152.42.237.33"
+
 # Create required directories
 mkdir -p nginx/conf.d
-mkdir -p nginx/ssl
 mkdir -p nginx/www
 mkdir -p logs
 
@@ -24,28 +26,7 @@ if ! command -v docker-compose &> /dev/null; then
     sudo chmod +x /usr/local/bin/docker-compose
 fi
 
-# Prompt for SSL certificate setup
-echo "Do you want to set up SSL with Certbot? (y/n)"
-read -r setup_ssl
-
-if [ "$setup_ssl" = "y" ]; then
-    # Install Certbot
-    sudo apt-get update
-    sudo apt-get install -y certbot
-
-    # Get SSL certificate
-    sudo certbot certonly --standalone -d scrapingns.hapidzfadli.com
-
-    # Copy SSL certificates
-    sudo cp /etc/letsencrypt/live/scrapingns.hapidzfadli.com/fullchain.pem nginx/ssl/
-    sudo cp /etc/letsencrypt/live/scrapingns.hapidzfadli.com/privkey.pem nginx/ssl/
-    
-    # Set proper permissions
-    sudo chmod 755 nginx/ssl
-    sudo chmod 644 nginx/ssl/fullchain.pem nginx/ssl/privkey.pem
-fi
-
 # Build and start the Docker containers
 docker-compose up -d
 
-echo "Setup complete! Your application should be accessible at https://scrapingns.hapidzfadli.com"
+echo "Setup complete! Your application should be accessible at http://$SERVER_IP"
