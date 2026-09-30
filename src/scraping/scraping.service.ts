@@ -100,7 +100,10 @@ export class ScrapingService {
             const post_content = $('div.entry-content.entry-content-single p').first().text();
 
             const trailerUrl = $('a.gmr-trailer-popup').attr('href') || 'xxx';
-            const posterUrl = $('img.attachment-thumbnail').attr('src')?.replace('-60x90', '');
+            const posterUrl =
+                $('img.attachment-thumbnail').attr('src')?.replace('-60x90', '') ||
+                $('meta[property="og:image"]').attr('content') ||
+                '';
 
             const mediaItem: MediaItemDto = {
                 post_title: post_title,
